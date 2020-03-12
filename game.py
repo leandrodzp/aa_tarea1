@@ -1,6 +1,6 @@
 import numpy as np
 from copy import deepcopy
-from constants import DIMENSION, FREE, PLAYER_0, PLAYER_1, ROW, COL
+from constants import DIMENSION, FREE, PLAYER_1, PLAYER_2, ROW, COL
 from helpers import my_pieces, valid_moves, adyacent_positions
 class Game(object):
 
@@ -8,11 +8,11 @@ class Game(object):
     while True: # Construct a non-winner board
       board = np.repeat(FREE, DIMENSION*DIMENSION)
       initial_positions = np.random.choice(25, 8, replace=False)
-      board[initial_positions[0:4]] = PLAYER_0
-      board[initial_positions[4:8]] = PLAYER_1
+      board[initial_positions[0:4]] = PLAYER_1
+      board[initial_positions[4:8]] = PLAYER_2
       board.resize([DIMENSION, DIMENSION])
       self.board = board
-      if (not self.player_won(PLAYER_0)) and (not self.player_won(PLAYER_1)):
+      if (not self.player_won(PLAYER_1)) and (not self.player_won(PLAYER_1)):
         break
     
     self.status = 'playing'
@@ -21,9 +21,12 @@ class Game(object):
   #   if (self.is_valid_move(future)):
   #     self.board[future] = self.board[current]
   #     self.board[current] = FREE
+  def possible_moves(self, player):
+    return []
 
   def move_piece(self, new_board):
-    self.board = new_board
+    # self.board = new_board
+    pass
 
   def player_won(self, turn):
     # Check horizontal positions

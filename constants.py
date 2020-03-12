@@ -1,6 +1,8 @@
 DIMENSION = 5
-FREE = -1
-PLAYER_0 = 0
+FREE = 0
 PLAYER_1 = 1
+PLAYER_2 = 2
 ROW = 0
 COL = 1
+RANDOM = 'random'
+TRAIN = 'train'
