@@ -1,0 +1,6 @@
+DIMENSION = 5
+FREE = -1
+PLAYER_0 = 0
+PLAYER_1 = 1
+ROW = 0
+COL = 1
