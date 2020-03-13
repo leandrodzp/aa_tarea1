@@ -1,7 +1,7 @@
 import numpy as np
 from copy import deepcopy
 from constants import DIMENSION, FREE, PLAYER_1, PLAYER_2, ROW, COL
-from helpers import my_pieces, valid_moves, adyacent_positions
+
 class Game(object):
 
   def __init__(self):
@@ -61,4 +61,16 @@ class Game(object):
 
     return False
 
+  def adyacent_positions(self, position):
+    row, col = position
+    adjacents = [(row-1,col-1),(row-1,col),(row-1,col+1),(row,col+1),(row+1,col+1),(row+1,col),(row+1,col-1),(row,col-1)]
+    adjacents = list(filter(lambda x: (x[0] >= 0 and x[1] >= 0) and (x[0] < DIMENSION and x[1] < DIMENSION), adjacents))
+    return adjacents
 
+  def my_pieces(self, player):
+    positions = np.where(self.board == player)
+    positions = list(zip(positions[0],positions[1]))
+    return positions
+
+  def valid_moves(self, piece):
+    pass
