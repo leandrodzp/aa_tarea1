@@ -21,6 +21,19 @@ class RandomPlayer(Player):
 class TrainPlayer(Player):
   def __init__(self):
     super().__init__
+    self.weights = []
+  
+  def eval_board(self, board):
+    return 3
+
+  def adjust_weights(self):
+    pass
 
   def make_move(self, possible_moves):
-    pass
+    val_best_move = -1
+    for board in possible_moves:
+      new_eval = self.eval_board(board)
+      if (new_eval > val_best_move):
+        best_board = board
+        val_best_move = new_eval
+    return best_board

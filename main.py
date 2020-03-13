@@ -17,6 +17,8 @@ if __name__ == "__main__":
     else:
       next_move = player2.make_move(all_moves)
     game.move_piece(next_move)
+    if (game.player_won(turn)):
+      print('THE WINNER IS ', turn)
+      break
     turn = PLAYER_1 if (turn == PLAYER_2) else PLAYER_2
     i += 1
-
