@@ -96,6 +96,20 @@ class Game(object):
 
 
 
+  def adjacent_pieces(self, piece):
+    player = self.board[piece]
+    ap = self.adyacent_positions(piece)
+    return list(filter(lambda x: (self.board[x] == player), ap))
+
+  def total_adjacents(self, player):
+    my_pieces = self.my_pieces(player)
+    total = 0
+    for p in my_pieces:
+      ap = self.adjacent_pieces(p)
+      total += len(ap)
+    return total
+
+
 ##################### MOVEMENT VALIDATIONS ###################
 
   def is_valid_move(self, position):
