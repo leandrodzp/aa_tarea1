@@ -74,3 +74,14 @@ class Game(object):
 
   def valid_moves(self, piece):
     pass
+
+##################### MOVEMENT VALIDATIONS ###################
+
+  def is_valid_move(self, position):
+    return (self.is_in_range(position[ROW]) and self.is_in_range(position[COL]) and self.is_free(position))
+
+  def is_in_range(self, num):
+    return (0 <= num <= DIMENSION - 1)
+
+  def is_free(self, position):
+    return (self.board[position] == FREE)
