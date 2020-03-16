@@ -1,6 +1,7 @@
 import numpy as np
 from copy import deepcopy
 from constants import DIMENSION, FREE, PLAYER_1, PLAYER_2, ROW, COL
+from copy import deepcopy
 
 class Game(object):
 
@@ -17,16 +18,21 @@ class Game(object):
     
     self.status = 'playing'
 
-  # def move_piece(self, current, future):
-  #   if (self.is_valid_move(future)):
-  #     self.board[future] = self.board[current]
-  #     self.board[current] = FREE
-  def possible_moves(self, player):
-    return []
+  # devuelve nuevo tablero con ficha movida
+  def move_piece(self, current, future):
+    if (self.is_valid_move(future)):
+      future_board = deepcopy(self.board)
+      future_board[future] = future_board[current]
+      future_board[current] = FREE
+    return future_board
 
-  def move_piece(self, new_board):
-    # self.board = new_board
-    pass
+  # devuelve todos los posibles siguientes tableros para un jugador
+  def possible_moves(self, player):
+    my_pieces = self.my_pieces(player)
+    moves = []
+    for mp in my_pieces:
+      moves = moves + self.next_boards_for(mp)
+    return moves
 
   def player_won(self, turn):
     # Check horizontal positions
@@ -72,8 +78,23 @@ class Game(object):
     positions = list(zip(positions[0],positions[1]))
     return positions
 
-  def valid_moves(self, piece):
-    pass
+  # array de posiciones válidas donde se puede mover determinada pieza
+  def valid_moves_for(self, piece):
+    adjacent_positions = self.adyacent_positions(piece)
+    res = []
+    for ap in adjacent_positions:
+      if self.is_free(ap):
+        res = res + [ap]
+    return res
+
+  def next_boards_for(self, piece):
+    valid_moves = self.valid_moves_for(piece)
+    next_boards = []
+    for vm in valid_moves:
+      next_boards = next_boards + [self.move_piece(piece, vm)]
+    return next_boards
+
+
 
 ##################### MOVEMENT VALIDATIONS ###################
 
