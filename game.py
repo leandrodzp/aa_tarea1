@@ -96,6 +96,45 @@ class Game(object):
 
 
 
+  def adjacent_pieces(self, piece):
+    player = self.board[piece]
+    ap = self.adyacent_positions(piece)
+    return list(filter(lambda x: (self.board[x] == player), ap))
+
+  def total_adjacents(self, player):
+    my_pieces = self.my_pieces(player)
+    total = 0
+    for p in my_pieces:
+      ap = self.adjacent_pieces(p)
+      total += len(ap)
+    return total
+
+  def total_components(self, player):
+    return len(self.islands(player))
+
+  def islands(self, player):
+    my_pieces = set(self.my_pieces(player))
+    res = []
+    while my_pieces:
+      piece = my_pieces.pop()
+      component = self.islands_helper(piece)
+      my_pieces = my_pieces - component
+      res.append(list(component))
+    return res
+
+  def islands_helper(self, piece):
+    visitados = set()
+    visitados.add(piece)
+    cola = [piece]
+    while cola:
+      actual = cola.pop()
+      adyacentes = self.adjacent_pieces(actual)
+      for ad in adyacentes:
+        if not ad in visitados:
+          visitados.add(ad)
+          cola.append(ad)
+    return visitados
+
 ##################### MOVEMENT VALIDATIONS ###################
 
   def is_valid_move(self, position):
