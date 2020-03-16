@@ -6,8 +6,8 @@ from constants import RANDOM, TRAIN, PLAYER_1, PLAYER_2
 if __name__ == "__main__":
   turn = PLAYER_1
   game = Game()
-  player1 = RandomPlayer()
-  player2 = RandomPlayer()
+  player1 = RandomPlayer(1)
+  player2 = RandomPlayer(2)
   max_moves = 50
   i = 0
   while i < max_moves:
@@ -16,7 +16,7 @@ if __name__ == "__main__":
       next_move = player1.make_move(all_moves)
     else:
       next_move = player2.make_move(all_moves)
-    game.move_piece(next_move)
+    game.make_move(next_move)
     if (game.player_won(turn)):
       print('THE WINNER IS ', turn)
       break

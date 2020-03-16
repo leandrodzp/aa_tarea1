@@ -1,7 +1,7 @@
 import numpy as np
 from copy import deepcopy
-from constants import DIMENSION, FREE, PLAYER_1, PLAYER_2, ROW, COL
-from copy import deepcopy
+from constants import DIMENSION, FREE, PLAYER_1, PLAYER_2
+from helpers import my_pieces, adjacent_positions, adjacent_pieces, islands, is_valid_move, is_free
 
 class Game(object):
 
@@ -15,22 +15,24 @@ class Game(object):
       self.board = board
       if (not self.player_won(PLAYER_1)) and (not self.player_won(PLAYER_1)):
         break
-    
-    self.status = 'playing'
+  
+  def make_move(self, new_board):
+    # self.board = new_board
+    pass
 
-  # devuelve nuevo tablero con ficha movida
+  # Returns new board with the piece moved
   def move_piece(self, current, future):
-    if (self.is_valid_move(future)):
+    if (is_valid_move(self.board, future)):
       future_board = deepcopy(self.board)
       future_board[future] = future_board[current]
       future_board[current] = FREE
     return future_board
 
-  # devuelve todos los posibles siguientes tableros para un jugador
+  # Returns all the possible movement boards for a player
   def possible_moves(self, player):
-    my_pieces = self.my_pieces(player)
+    pieces = my_pieces(player, self.board)
     moves = []
-    for mp in my_pieces:
+    for mp in pieces:
       moves = moves + self.next_boards_for(mp)
     return moves
 
@@ -67,23 +69,12 @@ class Game(object):
 
     return False
 
-  def adyacent_positions(self, position):
-    row, col = position
-    adjacents = [(row-1,col-1),(row-1,col),(row-1,col+1),(row,col+1),(row+1,col+1),(row+1,col),(row+1,col-1),(row,col-1)]
-    adjacents = list(filter(lambda x: (x[0] >= 0 and x[1] >= 0) and (x[0] < DIMENSION and x[1] < DIMENSION), adjacents))
-    return adjacents
-
-  def my_pieces(self, player):
-    positions = np.where(self.board == player)
-    positions = list(zip(positions[0],positions[1]))
-    return positions
-
-  # array de posiciones válidas donde se puede mover determinada pieza
+  # Returns list of possible movement positions for a piece
   def valid_moves_for(self, piece):
-    adjacent_positions = self.adyacent_positions(piece)
+    adjacents = adjacent_positions(piece)
     res = []
-    for ap in adjacent_positions:
-      if self.is_free(ap):
+    for ap in adjacents:
+      if is_free(self.board, ap):
         res = res + [ap]
     return res
 
@@ -94,54 +85,10 @@ class Game(object):
       next_boards = next_boards + [self.move_piece(piece, vm)]
     return next_boards
 
-
-
-  def adjacent_pieces(self, piece):
-    player = self.board[piece]
-    ap = self.adyacent_positions(piece)
-    return list(filter(lambda x: (self.board[x] == player), ap))
-
   def total_adjacents(self, player):
-    my_pieces = self.my_pieces(player)
+    pieces = my_pieces(player, self.board)
     total = 0
-    for p in my_pieces:
-      ap = self.adjacent_pieces(p)
+    for p in pieces:
+      ap = adjacent_pieces(p, self.board)
       total += len(ap)
     return total
-
-  def total_components(self, player):
-    return len(self.islands(player))
-
-  def islands(self, player):
-    my_pieces = set(self.my_pieces(player))
-    res = []
-    while my_pieces:
-      piece = my_pieces.pop()
-      component = self.islands_helper(piece)
-      my_pieces = my_pieces - component
-      res.append(list(component))
-    return res
-
-  def islands_helper(self, piece):
-    visitados = set()
-    visitados.add(piece)
-    cola = [piece]
-    while cola:
-      actual = cola.pop()
-      adyacentes = self.adjacent_pieces(actual)
-      for ad in adyacentes:
-        if not ad in visitados:
-          visitados.add(ad)
-          cola.append(ad)
-    return visitados
-
-##################### MOVEMENT VALIDATIONS ###################
-
-  def is_valid_move(self, position):
-    return (self.is_in_range(position[ROW]) and self.is_in_range(position[COL]) and self.is_free(position))
-
-  def is_in_range(self, num):
-    return (0 <= num <= DIMENSION - 1)
-
-  def is_free(self, position):
-    return (self.board[position] == FREE)
