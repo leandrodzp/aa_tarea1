@@ -16,6 +16,55 @@ class Game(object):
       if (not self.player_won(PLAYER_1)) and (not self.player_won(PLAYER_1)):
         break
   
+  def max_fichas_alineadas(self, player):
+    print(self)
+    _my_pieces = my_pieces(player, self.board)
+    _my_pieces.sort()
+    max = 1
+    cant = 0
+
+    # checks the largest current line
+    for coord in _my_pieces:
+        if coord[0]+1 < DIMENSION and coord[1]+1 < DIMENSION and (coord[0]+1, coord[1]+1) in _my_pieces: # right diagonal
+            if coord[0]+2 < DIMENSION and coord[1]+2 < DIMENSION and (coord[0]+2, coord[1]+2) in _my_pieces: # right diagonal
+                if coord[0]+3 < DIMENSION and coord[1]+3 < DIMENSION and (coord[0]+3, coord[1]+3) in _my_pieces: # right diagonal
+                    print((coord[0]+3, coord[1]+3))
+                    return 4
+                else:
+                    return 3
+            else:
+                return 2
+        if coord[0]+1 < DIMENSION and coord[1]-1 >= 0 and (coord[0]+1, coord[1]-1) in _my_pieces: # left diagonal
+            if coord[0]+2 < DIMENSION and coord[1]-2 >= 0 and (coord[0]+2, coord[1]-2) in _my_pieces: # left diagonal
+                if coord[0]+3 < DIMENSION and coord[1]-3 >= 0 and (coord[0]+3, coord[1]-3) in _my_pieces: # left diagonal
+                    return 4
+                else:
+                    return 3
+            else:
+                return 2
+        if coord[1]+1 < DIMENSION and (coord[0], coord[1]+1) in _my_pieces: # ->
+            if coord[1]+2 < DIMENSION and (coord[0], coord[1]+2) in _my_pieces: # -->
+                if coord[1]+3 < DIMENSION and (coord[0], coord[1]+3) in _my_pieces: # --->
+                    print((coord[0], coord[1]+3))
+                    return 4
+                else:
+                    return 3
+            else:
+                return 2
+        if coord[0]+1 < DIMENSION and (coord[0]+1, coord[1]) in _my_pieces: # downwards
+            if coord[0]+2 < DIMENSION and (coord[0]+2, coord[1]) in _my_pieces: # downwards
+                if coord[0]+3 < DIMENSION and (coord[0]+3, coord[1]) in _my_pieces: # downwards
+                    print((coord[0]+3, coord[1]))
+                    return 4
+                else:
+                    return 3
+            else:
+                return 2
+        # bandera para asegurar que evalue todas mis fichas.
+        cant += 1    
+        if cant == 4:
+            return 1
+
   def make_move(self, new_board):
     # self.board = new_board
     pass
