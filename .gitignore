@@ -1,1 +1,5 @@
 .pyc
+ .ipynb_checkpoints/
+ __pycache__/*.pyc
+ __pycache__/constants.cpython-37.pyc
+ __pycache__/game.cpython-37.pyc
