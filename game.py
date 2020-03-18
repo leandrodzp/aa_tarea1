@@ -13,7 +13,7 @@ class Game(object):
       board[initial_positions[4:8]] = PLAYER_2
       board.resize([DIMENSION, DIMENSION])
       self.board = board
-      if (not self.player_won(PLAYER_1)) and (not self.player_won(PLAYER_1)):
+      if (not self.player_won(PLAYER_1)) and (not self.player_won(PLAYER_2)):
         break
   
   def make_move(self, new_board):
