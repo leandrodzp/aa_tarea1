@@ -6,6 +6,7 @@ ROW = 0
 COL = 1
 RANDOM = 'random'
 TRAIN = 'train'
+MU = 0.3
 W0 = 0.2 # Independient term
 W1 = -0.2 # Quantity of conexions
 W2 = 0.2 # Quantity of algiments
