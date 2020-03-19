@@ -28,7 +28,7 @@ class Game(object):
         return [connections_p1, aligned_p1, components_p1, connections_p2, aligned_p2, components_p2]
 
     def make_move(self, new_board):
-        # self.board = new_board
+        self.board = new_board
         pass
 
     # Returns new board with the piece moved

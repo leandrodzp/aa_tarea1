@@ -11,6 +11,7 @@ class Player(ABC):
 
     @abstractmethod
     def make_move(self, current_board, possible_moves):
+        
         pass
 
     @abstractmethod
@@ -23,9 +24,8 @@ class RandomPlayer(Player):
         super().__init__(num_player)
 
     def make_move(self, current_board, possible_moves):
-        # next_move = np.random.choice(possible_moves, 1)
-        next_move = []
-        return next_move
+        next_move = np.random.choice(len(possible_moves), 1)
+        return possible_moves[next_move[0]]
 
     def end_game(self, winner):
         pass
@@ -45,8 +45,7 @@ class LearningPlayer(Player):
 
     def create_train_examples(self, winner):
         train_examples = []
-
-        for i, board in self.moves:
+        for i, board in enumerate(self.moves):
             if (i < len(self.moves) - 1):
                 example = (board, self.eval_board(self.moves[i + 1]))
                 train_examples.append(example)
@@ -58,10 +57,10 @@ class LearningPlayer(Player):
     def adjust_weights(self, winner):
         train_examples = self.create_train_examples(winner)
 
-        for board, v_train in train_examples:
+        for board, v_train in enumerate(train_examples):
             v_op = self.eval_board(board)
 
-            for index, _ in self.weights:
+            for index, _ in enumerate(self.weights):
                 self.weights[index] = MU * (v_train - v_op) * board[1][index]
 
     def make_move(self, current_board, possible_moves):
@@ -74,7 +73,8 @@ class LearningPlayer(Player):
                 val_best_move = new_eval
             if (new_eval == val_best_move):
                 best_boards.append(board)
-        next_board = np.random.choice(best_boards, 1)
+        next_board_index = np.random.choice(len(best_boards), 1)
+        next_board = best_boards[next_board_index[0]]
         self.moves.extend([current_board, next_board])
         return next_board
 
