@@ -13,7 +13,8 @@ class Game(object):
             board[initial_positions[0:4]] = PLAYER_1
             board[initial_positions[4:8]] = PLAYER_2
             board.resize([DIMENSION, DIMENSION])
-            self.board = (board, self.get_board_attributes(board))
+            attributes = self.get_board_attributes(board)
+            self.board = (board, attributes)
             if (not self.player_won(PLAYER_1)) and (not self.player_won(PLAYER_2)):
                 break
 
