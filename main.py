@@ -6,8 +6,8 @@ from constants import RANDOM, TRAIN, PLAYER_1, PLAYER_2
 if __name__ == "__main__":
     turn = PLAYER_1
     game = Game()
-    player1 = LearningPlayer(1)
-    player2 = RandomPlayer(2)
+    player1 = LearningPlayer(PLAYER_1)
+    player2 = RandomPlayer(PLAYER_2)
     max_moves = 500
     i = 0
     #TODO: TIE?

@@ -39,7 +39,7 @@ class LearningPlayer(Player):
 
     def eval_board(self, board):
         terms = board[1].copy()
-        terms.insert(0, 1)
+        terms.append(1)
         res = np.dot(self.weights, terms)
         return res/(1 + abs(res))
 
@@ -57,11 +57,12 @@ class LearningPlayer(Player):
     def adjust_weights(self, winner):
         train_examples = self.create_train_examples(winner)
 
-        for board, v_train in enumerate(train_examples):
+        for board, v_train in train_examples:
             v_op = self.eval_board(board)
 
             for index, _ in enumerate(self.weights):
-                self.weights[index] = MU * (v_train - v_op) * board[1][index]
+                coeficient = 1 if index == len(self.weights) - 1 else board[1][index]
+                self.weights[index] = MU * (v_train - v_op) * coeficient
 
     def make_move(self, current_board, possible_moves):
         val_best_move = -1
