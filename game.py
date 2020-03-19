@@ -1,7 +1,7 @@
 import numpy as np
 from copy import deepcopy
 from constants import DIMENSION, FREE, PLAYER_1, PLAYER_2
-from helpers import my_pieces, adjacent_positions, adjacent_pieces, islands, is_valid_move, is_free
+from helpers import my_pieces, adjacent_positions, max_aligned_pieces, adjacent_pieces, islands, is_valid_move, is_free, total_components, total_adjacents
 
 
 class Game(object):
@@ -18,8 +18,14 @@ class Game(object):
                 break
 
     def get_board_attributes(self, board):
-        attributes = []
-        return attributes
+        connections_p1 = total_adjacents(board, PLAYER_1)
+        aligned_p1 = max_aligned_pieces(board, PLAYER_1)
+        components_p1 = total_components(board, PLAYER_1)
+        connections_p2 = total_adjacents(board, PLAYER_2)
+        aligned_p2 = max_aligned_pieces(board, PLAYER_2)
+        components_p2 = total_components(board, PLAYER_2)
+
+        return [connections_p1, aligned_p1, components_p1, connections_p2, aligned_p2, components_p2]
 
     def make_move(self, new_board):
         # self.board = new_board
@@ -92,11 +98,3 @@ class Game(object):
         for vm in valid_moves:
             next_boards = next_boards + [self.move_piece(piece, vm)]
         return next_boards
-
-    def total_adjacents(self, player):
-        pieces = my_pieces(player, self.board[0])
-        total = 0
-        for p in pieces:
-            ap = adjacent_pieces(p, self.board[0])
-            total += len(ap)
-        return total

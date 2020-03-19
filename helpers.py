@@ -42,7 +42,7 @@ def distance(piece1, piece2):
 def adjacent_positions(position):
     row, col = position
     adjacents = [(row-1, col-1), (row-1, col), (row-1, col+1), (row, col+1),
-                 (row+1, col+1), (row+1, col), (row+1, col-1), (row, col-1)]
+                (row+1, col+1), (row+1, col), (row+1, col-1), (row, col-1)]
     adjacents = list(filter(lambda x: (x[0] >= 0 and x[1] >= 0) and (
         x[0] < DIMENSION and x[1] < DIMENSION), adjacents))
     return adjacents
@@ -82,9 +82,8 @@ def islands(player, board):
         res.append(list(component))
     return res
 
+
 # Returns total components of the pieces in a board related to a player
-
-
 def total_components(board, player):
     return len(islands(player, board))
 
@@ -139,3 +138,11 @@ def max_aligned_pieces(board, player):
         cant += 1
         if cant == 4:
             return 1
+
+def total_adjacents(board, player):
+    pieces = my_pieces(player, board)
+    total = 0
+    for p in pieces:
+        ap = adjacent_pieces(p, board)
+        total += len(ap)
+    return total
