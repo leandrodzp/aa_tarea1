@@ -92,3 +92,47 @@ class Game(object):
       ap = adjacent_pieces(p, self.board)
       total += len(ap)
     return total
+
+  def max_fichas_alineadas(self, player):
+    pieces = my_pieces(player, self.board)
+    pieces.sort()
+    cant = 0
+
+    # checks the largest current line
+    for coord in pieces:
+        if coord[0]+1 < DIMENSION and coord[1]+1 < DIMENSION and (coord[0]+1, coord[1]+1) in pieces: # right diagonal
+            if coord[0]+2 < DIMENSION and coord[1]+2 < DIMENSION and (coord[0]+2, coord[1]+2) in pieces: # right diagonal
+                if coord[0]+3 < DIMENSION and coord[1]+3 < DIMENSION and (coord[0]+3, coord[1]+3) in pieces: # right diagonal
+                    return 4
+                else:
+                    return 3
+            else:
+                return 2
+        if coord[0]+1 < DIMENSION and coord[1]-1 >= 0 and (coord[0]+1, coord[1]-1) in pieces: # left diagonal
+            if coord[0]+2 < DIMENSION and coord[1]-2 >= 0 and (coord[0]+2, coord[1]-2) in pieces: # left diagonal
+                if coord[0]+3 < DIMENSION and coord[1]-3 >= 0 and (coord[0]+3, coord[1]-3) in pieces: # left diagonal
+                    return 4
+                else:
+                    return 3
+            else:
+                return 2
+        if coord[1]+1 < DIMENSION and (coord[0], coord[1]+1) in pieces: # ->
+            if coord[1]+2 < DIMENSION and (coord[0], coord[1]+2) in pieces: # -->
+                if coord[1]+3 < DIMENSION and (coord[0], coord[1]+3) in pieces: # --->
+                    return 4
+                else:
+                    return 3
+            else:
+                return 2
+        if coord[0]+1 < DIMENSION and (coord[0]+1, coord[1]) in pieces: # downwards
+            if coord[0]+2 < DIMENSION and (coord[0]+2, coord[1]) in pieces: # downwards
+                if coord[0]+3 < DIMENSION and (coord[0]+3, coord[1]) in pieces: # downwards
+                    return 4
+                else:
+                    return 3
+            else:
+                return 2
+        # bandera para asegurar que evalue todas mis fichas.
+        cant += 1
+        if cant == 4:
+            return 1
