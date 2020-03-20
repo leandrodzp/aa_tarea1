@@ -1,7 +1,7 @@
 import numpy as np
 from abc import ABC, abstractmethod
-from constants import RANDOM, TRAIN, W0, W1, W2, W3, W4, W5, W6, MU
-from helpers import my_pieces
+from constants import RANDOM, TRAIN, MU, WIN, LOST, TIE
+from helpers import my_pieces, get_weights, save_weights
 
 
 class Player(ABC):
@@ -15,7 +15,7 @@ class Player(ABC):
         pass
 
     @abstractmethod
-    def end_game(self, winner):
+    def end_game(self, result):
         pass
 
 
@@ -27,7 +27,7 @@ class RandomPlayer(Player):
         next_move = np.random.choice(len(possible_moves), 1)
         return possible_moves[next_move[0]]
 
-    def end_game(self, winner):
+    def end_game(self, result):
         pass
 
 
@@ -35,33 +35,40 @@ class LearningPlayer(Player):
     def __init__(self, num_player):
         super().__init__(num_player)
         self.moves = []
-        self.weights = [W0, W1, W2, W3, W4, W5, W6]
+        weights = get_weights()
+        self.weights = weights
 
     def eval_board(self, board):
         terms = board[1].copy()
-        terms.insert(0, 1)
+        terms.append(1)
         res = np.dot(self.weights, terms)
         return res/(1 + abs(res))
+    
+    def eval_final(self, result):
+        if (result == WIN): return 1
+        if (result == LOST): return -1
+        if (result == TIE): return -0.5
 
-    def create_train_examples(self, winner):
+    def create_train_examples(self, result):
         train_examples = []
         for i, board in enumerate(self.moves):
             if (i < len(self.moves) - 1):
                 example = (board, self.eval_board(self.moves[i + 1]))
                 train_examples.append(example)
-
-        train_examples.append((self.moves[-1], 1 if winner else -1))
+        result_final = self.eval_final(result)
+        train_examples.append((self.moves[-1], result_final))
 
         return train_examples
 
-    def adjust_weights(self, winner):
-        train_examples = self.create_train_examples(winner)
+    def adjust_weights(self, result):
+        train_examples = self.create_train_examples(result)
 
-        for board, v_train in enumerate(train_examples):
+        for board, v_train in train_examples:
             v_op = self.eval_board(board)
 
             for index, _ in enumerate(self.weights):
-                self.weights[index] = MU * (v_train - v_op) * board[1][index]
+                coeficient = 1 if index == len(self.weights) - 1 else board[1][index]
+                self.weights[index] = MU * (v_train - v_op) * coeficient
 
     def make_move(self, current_board, possible_moves):
         val_best_move = -1
@@ -78,6 +85,8 @@ class LearningPlayer(Player):
         self.moves.extend([current_board, next_board])
         return next_board
 
-    def end_game(self, winner):
-        self.adjust_weights(winner)
+    def end_game(self, result):
+        self.adjust_weights(result)
+        print('The weights ', self.weights)
+        save_weights(self.weights)
         self.moves = []
