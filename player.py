@@ -1,7 +1,7 @@
 import numpy as np
 from abc import ABC, abstractmethod
-from constants import RANDOM, TRAIN, W0, W1, W2, W3, W4, W5, W6, MU, WIN, LOST, TIE
-from helpers import my_pieces
+from constants import RANDOM, TRAIN, MU, WIN, LOST, TIE
+from helpers import my_pieces, get_weights, save_weights
 
 
 class Player(ABC):
@@ -35,7 +35,8 @@ class LearningPlayer(Player):
     def __init__(self, num_player):
         super().__init__(num_player)
         self.moves = []
-        self.weights = [W0, W1, W2, W3, W4, W5, W6]
+        weights = get_weights()
+        self.weights = weights
 
     def eval_board(self, board):
         terms = board[1].copy()
@@ -87,4 +88,5 @@ class LearningPlayer(Player):
     def end_game(self, result):
         self.adjust_weights(result)
         print('The weights ', self.weights)
+        save_weights(self.weights)
         self.moves = []
