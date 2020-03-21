@@ -146,3 +146,19 @@ def total_adjacents(board, player):
         ap = adjacent_pieces(p, board)
         total += len(ap)
     return total
+
+def get_weights():
+    f = open("values.txt", "r")
+    content = f.readlines()
+    weights = []
+    for line in content:
+        weights += [float(line)]
+    f.close()
+    return weights
+
+def save_weights(weights):
+    open('values.txt', 'w').close() # clear previous values
+    f = open("values.txt", "w+")
+    for w in weights:
+        f.write(str(w)+'\n')
+    f.close()
