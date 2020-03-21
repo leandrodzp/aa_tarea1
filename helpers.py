@@ -88,11 +88,10 @@ def total_components(board, player):
     return len(islands(player, board))
 
 
-def max_aligned_pieces(board, player):
+def max_alig_right_diag(board, player):
     pieces = my_pieces(player, board)
     pieces.sort()
     cant = 0
-
     # checks the largest current line
     for coord in pieces:
         # right diagonal
@@ -106,6 +105,16 @@ def max_aligned_pieces(board, player):
                     return 3
             else:
                 return 2
+        cant += 1
+        if cant == 4:
+            return 1
+
+def max_alig_left_diag(board, player):
+    pieces = my_pieces(player, board)
+    pieces.sort()
+    cant = 0
+    # checks the largest current line
+    for coord in pieces:
         # left diagonal
         if coord[0]+1 < DIMENSION and coord[1]-1 >= 0 and (coord[0]+1, coord[1]-1) in pieces:
             # left diagonal
@@ -117,6 +126,16 @@ def max_aligned_pieces(board, player):
                     return 3
             else:
                 return 2
+        cant += 1
+        if cant == 4:
+            return 1
+
+def max_alig_horizontal(board, player):
+    pieces = my_pieces(player, board)
+    pieces.sort()
+    cant = 0
+    # checks the largest current line
+    for coord in pieces:
         if coord[1]+1 < DIMENSION and (coord[0], coord[1]+1) in pieces:  # ->
             if coord[1]+2 < DIMENSION and (coord[0], coord[1]+2) in pieces:  # -->
                 if coord[1]+3 < DIMENSION and (coord[0], coord[1]+3) in pieces:  # --->
@@ -125,6 +144,15 @@ def max_aligned_pieces(board, player):
                     return 3
             else:
                 return 2
+        cant += 1
+        if cant == 4:
+            return 1        
+
+def max_alig_vertical(board, player):
+    pieces = my_pieces(player, board)
+    pieces.sort()
+    cant = 0
+    for coord in pieces:
         if coord[0]+1 < DIMENSION and (coord[0]+1, coord[1]) in pieces:  # downwards
             if coord[0]+2 < DIMENSION and (coord[0]+2, coord[1]) in pieces:  # downwards
                 # downwards
