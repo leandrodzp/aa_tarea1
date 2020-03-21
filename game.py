@@ -30,7 +30,6 @@ class Game(object):
 
     def make_move(self, new_board):
         self.board = new_board
-        pass
 
     # Returns new board with the piece moved
     def move_piece(self, current, future):

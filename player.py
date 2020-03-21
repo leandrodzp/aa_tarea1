@@ -16,7 +16,7 @@ class Player(ABC):
         pass
 
     @abstractmethod
-    def end_game(self, result):
+    def end_game(self, final_board, result):
         pass
 
 
@@ -28,7 +28,7 @@ class RandomPlayer(Player):
         next_move = np.random.choice(len(possible_moves), 1)
         return possible_moves[next_move[0]]
 
-    def end_game(self, result):
+    def end_game(self, final_board, result):
         pass
 
 
@@ -50,19 +50,20 @@ class LearningPlayer(Player):
         if (result == LOST): return -1
         if (result == TIE): return -0.5
 
-    def create_train_examples(self, result):
+    def create_train_examples(self, final_board, result):
         train_examples = []
         for i, board in enumerate(self.moves):
             if (i < len(self.moves) - 1):
-                example = (board, self.eval_board(self.moves[i + 1]))
+                val_board = self.eval_board(self.moves[i + 1])
+                example = (board, val_board)
                 train_examples.append(example)
         result_final = self.eval_final(result)
-        train_examples.append((self.moves[-1], result_final))
+        train_examples.append((self.moves[-1] if result == WIN else final_board, result_final))
 
         return train_examples
 
-    def adjust_weights(self, result):
-        train_examples = self.create_train_examples(result)
+    def adjust_weights(self, final_board, result):
+        train_examples = self.create_train_examples(final_board, result)
 
         for board, v_train in train_examples:
             v_op = self.eval_board(board)
@@ -92,8 +93,8 @@ class LearningPlayer(Player):
             self.moves.extend([current_board, next_board])
             return next_board
 
-    def end_game(self, result):
-        self.adjust_weights(result)
+    def end_game(self, final_board, result):
+        self.adjust_weights(final_board, result)
         print('The weights ', self.weights)
         save_weights(self.weights)
         self.moves = []
