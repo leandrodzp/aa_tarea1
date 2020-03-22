@@ -1,18 +1,30 @@
+import sys
+import click
 from game import Game
 from player import RandomPlayer, LearningPlayer
 from constants import RANDOM, TRAIN, PLAYER_1, PLAYER_2, WIN, LOST, TIE
 
+@click.command()
+@click.option('--p2', default = 1, type = click.IntRange(1, 2), help='1 - Juegador aleatorio, \n 2 - Jugador inteligente')
+@click.option('--qnty', default = 200, type = click.INT, help='Cantidad de partidos a jugar')
+@click.option('--moves', default = 500, type = click.INT, help='Cantidad maxima de movimientos del partido')
+@click.option('--learn', default = True, type = click.BOOL, help='True - El jugador 1 aprende\n False - El jugador 1 no aprende')
 
-if __name__ == "__main__":
-    player1 = LearningPlayer(PLAYER_1)
-    player2 = RandomPlayer(PLAYER_2)
-    num_games = 500
+def main(p2, qnty, moves, learn):
+    player1 = LearningPlayer(PLAYER_1, learn)
+
+    if (p2 == 1):
+        player2 = RandomPlayer(PLAYER_2)
+    else:
+        player2 = LearningPlayer(PLAYER_2, False)
+
+    num_games = qnty
+    max_moves = moves
     num_wins_p1 = 0
     num_wins_p2 = 0
     num_ties = 0
 
-    for j in range(num_games):
-        max_moves = 500
+    for _ in range(num_games):
         winner = False
         i = 0
         turn = PLAYER_1
@@ -44,3 +56,6 @@ if __name__ == "__main__":
     print('winners p2 ', num_wins_p2)
     print('ties ', num_ties)
 
+
+if __name__ == "__main__":
+    main()

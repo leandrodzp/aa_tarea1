@@ -33,11 +33,11 @@ class RandomPlayer(Player):
 
 
 class LearningPlayer(Player):
-    def __init__(self, num_player):
+    def __init__(self, num_player, learn):
         super().__init__(num_player)
         self.moves = []
-        weights = get_weights()
-        self.weights = weights
+        self.learn = learn
+        self.weights = get_weights()
 
     def eval_board(self, board):
         terms = board[1].copy()
@@ -71,6 +71,7 @@ class LearningPlayer(Player):
             for index, _ in enumerate(self.weights):
                 coeficient = 1 if index == len(self.weights) - 1 else board[1][index]
                 self.weights[index] = MU * (v_train - v_op) * coeficient
+        save_weights(self.weights)
 
     def make_move(self, current_board, possible_moves):
         self.control += 1
@@ -94,7 +95,6 @@ class LearningPlayer(Player):
             return next_board
 
     def end_game(self, final_board, result):
-        self.adjust_weights(final_board, result)
+        if (self.learn): self.adjust_weights(final_board, result)
         print('The weights ', self.weights)
-        save_weights(self.weights)
         self.moves = []
