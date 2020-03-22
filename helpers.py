@@ -1,5 +1,5 @@
 import numpy as np
-from constants import DIMENSION, FREE, ROW, COL
+from constants import DIMENSION, FREE, ROW, COL, PLAYER_1, PLAYER_2
 
 # Returns if number is in rage
 
@@ -147,8 +147,12 @@ def total_adjacents(board, player):
         total += len(ap)
     return total
 
-def get_weights():
-    f = open("values.txt", "r")
+def get_weights(player):
+    if (player == PLAYER_1):
+        f = open("values_p1.txt", "r")
+    else:
+        f = open("values_p2.txt", "r")
+
     content = f.readlines()
     weights = []
     for line in content:
@@ -157,8 +161,13 @@ def get_weights():
     return weights
 
 def save_weights(weights):
-    open('values.txt', 'w').close() # clear previous values
-    f = open("values.txt", "w+")
+    open('values_p1.txt', 'w').close() # clear previous values
+    open('values_p2.txt', 'w').close() # clear previous values
+    f1 = open("values_p1.txt", "w+")
     for w in weights:
-        f.write(str(w)+'\n')
-    f.close()
+        f1.write(str(w)+'\n')
+    f1.close()
+    f2 = open("values_p2.txt", "w+")
+    for w in weights:
+        f2.write(str(w)+'\n')
+    f2.close()

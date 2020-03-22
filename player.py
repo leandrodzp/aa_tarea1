@@ -37,7 +37,7 @@ class LearningPlayer(Player):
         super().__init__(num_player)
         self.moves = []
         self.learn = learn
-        self.weights = get_weights()
+        self.weights = get_weights(num_player)
 
     def eval_board(self, board):
         terms = board[1].copy()
@@ -96,5 +96,5 @@ class LearningPlayer(Player):
 
     def end_game(self, final_board, result):
         if (self.learn): self.adjust_weights(final_board, result)
-        print('The weights ', self.weights)
+        print('The weights of player ', self.num_player, self.weights)
         self.moves = []
