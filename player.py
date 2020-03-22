@@ -8,6 +8,7 @@ class Player(ABC):
     def __init__(self, num_player):
         super().__init__
         self.num_player = num_player
+        self.control = 0
 
     @abstractmethod
     def make_move(self, current_board, possible_moves):
@@ -71,19 +72,25 @@ class LearningPlayer(Player):
                 self.weights[index] = MU * (v_train - v_op) * coeficient
 
     def make_move(self, current_board, possible_moves):
-        val_best_move = -1
-        best_boards = []
-        for board in possible_moves:
-            new_eval = self.eval_board(board)
-            if (new_eval > val_best_move):
-                best_boards = [board]
-                val_best_move = new_eval
-            if (new_eval == val_best_move):
-                best_boards.append(board)
-        next_board_index = np.random.choice(len(best_boards), 1)
-        next_board = best_boards[next_board_index[0]]
-        self.moves.extend([current_board, next_board])
-        return next_board
+        self.control += 1
+        self.control = self.control % 5
+        if self.control % 5 == 0 :
+            next_move = np.random.choice(len(possible_moves), 1)
+            return possible_moves[next_move[0]]
+        else:
+            val_best_move = -1
+            best_boards = []
+            for board in possible_moves:
+                new_eval = self.eval_board(board)
+                if (new_eval > val_best_move):
+                    best_boards = [board]
+                    val_best_move = new_eval
+                if (new_eval == val_best_move):
+                    best_boards.append(board)
+            next_board_index = np.random.choice(len(best_boards), 1)
+            next_board = best_boards[next_board_index[0]]
+            self.moves.extend([current_board, next_board])
+            return next_board
 
     def end_game(self, result):
         self.adjust_weights(result)
